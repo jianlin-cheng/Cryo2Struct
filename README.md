@@ -62,6 +62,8 @@ cryo2struct
 
 Update the configurations in the [config/arguments.yml](config/arguments.yml) file. Especialy the input data directory, trained model checkpoint path,  and density map name. Running the inference program on the ``GPU`` speeds up prediction. To enable ``GPU`` processing, modify ``infer_run_on`` in the configuration file to ``gpu`` and provide the GPU device id on ``infer_on_gpu``. 
 
+Cryo2Struct was trained on Cryo2StructData, available at [Cryo2StructData Havard Dataverse](https://doi.org/10.7910/DVN/FCDG0W). The source code for data preprocessing, label generation and validation of training data is available at [Cryo2StructData GitHub repository](https://github.com/BioinfoMachineLearning/cryo2struct). 
+
 **Compile Modified Viterbi algorithm:**
 The Hidden Markov Model-guided carbon-alpha alignment programs are available in [viterbi/](viterbi/). The alignment algorithm is written in C++ program, so compile them using: 
 
