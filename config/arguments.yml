@@ -1,0 +1,12 @@
+density_map_name: '34610'
+input_data_dir: 'input'
+amino_checkpoint: 'models/amino_acid_type.ckpt'
+atom_checkpoint: 'models/atom_type.ckpt'
+infer_run_on: 'cpu' # options- cpu or gpu
+infer_on_gpu: 0
+threshold: 0.4 # threshold for picking carbon alpha atoms
+clustering_threshold: 2 # clustering proximity
+use_sequence: 'full' # options- full or atomic_chain
+std_lambda: 10
+
+
