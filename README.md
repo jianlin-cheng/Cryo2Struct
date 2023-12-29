@@ -1,4 +1,4 @@
-# Cryo2Struct: De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer
+# Cryo2Struct: De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer and Hidden Markov Model
 
 
 Cryo2Struct is a method that employs deep learning and statistical modeling for de novo atomic structure modeling of cryogenic electron microscopy (cryo-EM) density maps. The modeling process is entirely automated, requiring no human intervention and is independent of external tools or additional factors. An overview of Cryo2Struct is presented in Figure below, more detail is available in the paper.
