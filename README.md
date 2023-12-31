@@ -1,14 +1,18 @@
 # Cryo2Struct: De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer and Hidden Markov Model
 
 
-Cryo2Struct is a method that employs deep learning and statistical modeling for de novo atomic structure modeling of cryogenic electron microscopy (cryo-EM) density maps. The modeling process is entirely automated, requiring no human intervention and is independent of external tools or additional factors. An overview of Cryo2Struct is presented in Figure below, more detail is available in the paper.
-
+Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method that first employs a 3D transformer-based model to identify atoms and amino acid types in cryo-EM density maps. It then utilizes a novel Hidden Markov Model (HMM) to connect predicted atoms, building the backbone structures of proteins.
 ![Cryo2Struct_overview](./img/overview.png)
 
 ## Setup Environment
-We will set up the environment using Anaconda.
 
-This is an example of setting up a conda environment to run the code. Use the following command to create the conda environment using the ``cryo2struct.yml`` file.
+Clone this repository and `cd` into it
+```
+git clone https://github.com/jianlin-cheng/Cryo2Struct.git
+cd ./Cryo2Struct
+```
+
+We will set up the environment using Anaconda. This is an example of setting up a conda environment to run the code. Use the following command to create the conda environment using the ``cryo2struct.yml`` file.
 
 ```
 conda env create -f cryo2struct.yml
@@ -34,7 +38,7 @@ bash preprocess/run_data_preparation.bash input/
 ```
 In the above example ``input/`` is the ``absolute input path`` where the maps are present.
 
-Note: For this example, the normalized map is provided, so there is no need to run the above bash command to prepare the map. Hence, the directory structure for this example looks like this:
+**Note**: For this example, the normalized map is provided, so there is no need to run the above bash command to prepare the map. Hence, the directory structure for this example looks like this:
 
 ```text 
 cryo2struct
@@ -46,8 +50,17 @@ cryo2struct
 ```
 
 2. **Running Cryo2Struct**
-The deep learning requires trained atom and amino acid type models. Please download the trained models from [Cryo2Struct Havard Dataverse](https://doi.org/10.7910/DVN/GQCTTD). The downloaded models should be organized as below:
+The deep learning requires trained atom and amino acid type models. The trained models are available in [Cryo2Struct Havard Dataverse](https://doi.org/10.7910/DVN/GQCTTD). Use the following to download the trained models. 
 
+```
+mkdir models
+cd models
+wget -O amino_acid_type.ckpt https://dataverse.harvard.edu/api/access/datafile/8076563
+wget -O atom_type.ckpt https://dataverse.harvard.edu/api/access/datafile/8076564
+cd ..
+```
+
+The organization of the downloaded models should look like:
 ```text 
 cryo2struct
 |── input
@@ -60,7 +73,11 @@ cryo2struct
     |-- atom_type.ckpt
 ```
 
-Update the configurations in the [config/arguments.yml](config/arguments.yml) file. Especialy the input data directory, trained model checkpoint path,  and density map name. Running the inference program on the ``GPU`` speeds up prediction. To enable ``GPU`` processing, modify ``infer_run_on`` in the configuration file to ``gpu`` and provide the GPU device id on ``infer_on_gpu``. 
+Update the configurations in the [config/arguments.yml](config/arguments.yml) file. Especialy the input data directory, trained model checkpoint path,  and density map name. By default the program runs inference in `CPU`, running the inference program on the ``GPU`` speeds up prediction. To enable ``GPU`` processing, modify ``infer_run_on`` in the configuration file to ``gpu`` and provide the GPU device id on ``infer_on_gpu`` (example: 0). One way to update the configuration by using visual editor (``vi``).
+
+```
+vi config/arguments.yml
+```
 
 Cryo2Struct was trained on Cryo2StructData, available at [Cryo2StructData Havard Dataverse](https://doi.org/10.7910/DVN/FCDG0W). The source code for data preprocessing, label generation and validation of training data is available at [Cryo2StructData GitHub repository](https://github.com/BioinfoMachineLearning/cryo2struct). 
 
@@ -68,15 +85,20 @@ Cryo2Struct was trained on Cryo2StructData, available at [Cryo2StructData Havard
 The Hidden Markov Model-guided carbon-alpha alignment programs are available in [viterbi/](viterbi/). The alignment algorithm is written in C++ program, so compile them using: 
 
 ```
+cd viterbi
 g++ -fPIC -shared -o viterbi.so viterbi.cpp -O3
+cd ..
 ```
+During the compilation, if the program asks for installation of `gcc-c++` package, then install it following the instructions. GCC C++ compiler is required to compile `viterbi.cpp`.
+
 If the compilation of the program fails due to library issues (which typically occurs when attempting to compile on older systems), you can try compiling using the following approach:
 ```
-conda activate cryo2struct
+cd viterbi
 conda install -c conda-forge gxx
 g++ -fPIC -shared -o viterbi.so viterbi.cpp -O3
+cd ..
 ```
-The above command activates the Conda environment and installs the ``gxx`` package, which provides the GCC C++ compiler. This compiler is useful for compiling C++ code on the system. The HMM alignment program runs on the ``CPU`` and is optimized at the highest level using the``-O3`` flag.
+The above command activates the Conda environment and installs the ``gxx`` package, which provides the GCC C++ compiler. This compiler is useful for compiling C++ code on the system. The HMM alignment program runs on the ``CPU`` and is optimized at the highest level using the``-O3`` flag. We tested, and the above compilation was successful on CentOS 7, 8, and AlmaLinux OS 8.8, 8.9. 
 
 Finally, run the following:
 
@@ -86,6 +108,7 @@ python3 cryo2struct.py --density_map_name 34610
 
 4. <ins>**Output**</ins>:  **Modeled atomic structure**
 The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full.pdb).
+
 
 
 ## Contact Information
