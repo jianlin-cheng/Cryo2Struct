@@ -210,7 +210,8 @@ def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, 
     
 
     # Load the C++ shared library
-    viterbi_algo_path = os.path.dirname(config_dict['input_data_dir'])
+    viterbi_algo_path = os.path.abspath(config_dict['input_data_dir'])
+    viterbi_algo_path = os.path.dirname(viterbi_algo_path)
     lib = ctypes.cdll.LoadLibrary(f'{viterbi_algo_path}/viterbi/viterbi.so')
 
     # Define the C++ wrapper function
@@ -259,7 +260,7 @@ def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, 
         end_time = time.time()
         runtime_seconds = end_time - start_time
         runtime_minutes = runtime_seconds / 60
-        print(f"Cryo2Struct Alignment : Run time {runtime_seconds:.2f} seconds ({runtime_minutes:.2f} minutes)")
+        print(f"Cryo2Struct Alignment: Run time {runtime_seconds:.2f} seconds ({runtime_minutes:.2f} minutes)")
 
         # clean up:
         map_directory_path = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}"
@@ -270,7 +271,7 @@ def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, 
         files_to_delete = glob.glob(os.path.join(map_directory_path, f"*.txt"))
         for f in files_to_delete:
             os.remove(f)
-        print("Done!")
+        print("Cryo2Struct: Finished!")
         exit()
 
 def execute(key_idx, states, transition_matrix, emission_matrix, config_dict):
