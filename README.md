@@ -156,7 +156,23 @@ If you have any question, feel free to open an issue or reach out to us: [ngzvh@
 ## Acknowledgements
 We thank computing resource Summit supercomputer at the [Oak Ridge Leadership Computing Facility](https://www.olcf.ornl.gov/) for supporting training of the deep learning model. Additionally, we appreciate the High-Performance Computing (HPC) resource, Hellbender, located at the University of Missouri, Columbia, MO, which was used for both the inference and alignment process.
 
+## Citing this work
+If you use the code or data in this package, please cite:
 
+```bibtex
+@article {Cryo2Struct,
+	author = {Nabin Giri and Jianlin Cheng},
+	title = {De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer and Hidden Markov Model},
+	elocation-id = {2024.01.02.573943},
+	year = {2024},
+	doi = {10.1101/2024.01.02.573943},
+	publisher = {Cold Spring Harbor Laboratory}
+	URL = {https://www.biorxiv.org/content/early/2024/01/02/2024.01.02.573943},
+	eprint = {https://www.biorxiv.org/content/early/2024/01/02/2024.01.02.573943.full.pdf},
+	journal = {bioRxiv}
+}
+
+```
 
 
 ## Visualizing the Atomic Structure Modeled by Cryo2Struct
