@@ -79,7 +79,6 @@ Update the configurations in the [config/arguments.yml](config/arguments.yml) fi
 vi config/arguments.yml
 ```
 
-Cryo2Struct was trained on Cryo2StructData, available at [Cryo2StructData Havard Dataverse](https://doi.org/10.7910/DVN/FCDG0W). The source code for data preprocessing, label generation and validation of training data is available at [Cryo2StructData GitHub repository](https://github.com/BioinfoMachineLearning/cryo2struct). 
 
 **Compile Modified Viterbi algorithm:**
 The Hidden Markov Model-guided carbon-alpha alignment programs are available in [viterbi/](viterbi/). The alignment algorithm is written in C++ program, so compile them using: 
@@ -109,13 +108,53 @@ python3 cryo2struct.py --density_map_name 34610
 4. <ins>**Output**</ins>:  **Modeled atomic structure**
 The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full.pdb).
 
+## Training Cryo2Struct Deep Learning
+The training programs are available in the [train/](train/) directory. Cryo2Struct was trained on Cryo2StructData, which is accessible on the [Cryo2StructData Dataverse](https://doi.org/10.7910/DVN/FCDG0W). Download the full dataset from [Cryo2Struct Full Dataset](https://doi.org/10.7910/DVN/FCDG0W) or a small subset from [Cryo2Struct Small Subsample Dataset](https://doi.org/10.7910/DVN/CGUENL). After downloading the dataset, `unzip` the compressed files. The directory names are the EMD ID of the cryo-EM density map.
+
+The dataset contains the preprocessed map ready for deep learning training. However, the cryo-EM density map label needs to be prepared. Run the following
+
+
+```
+python3 label/get_atoms_label.py density_map_directory
+python3 label/get_amino_labels.py density_map_directory
+```
+
+The `density_map_directory` is the absolute directory path where unzipped cryo-EM density maps are present. The above scripts generate the atom and amino acid-type labels, which are used during the training of the deep learning model.
+
+Split the data into training and validation sets. If you choose to use our predefined training and validation splits, refer to the Excel sheet in [Cryo2Struct Metadata](https://doi.org/10.7910/DVN/JMN60H), which contains the IDs for the training and validation cryo-EM density maps. Create separate directories for training and validation, and move the corresponding data to each directory.
+
+
+Generate sub-grids of cryo-EM density maps from training and validation dataset for training. These sub-grids are used for training the model. Run the following:
+
+```
+python3 train/grid_division_train.py train_map_directory train_sub_grids
+python3 train/grid_division_train.py valid_map_directory valid_sub_grids
+```
+
+The `train_map_directory` is the directory containing training cryo-EM density maps, and `train_sub_grids` is the directory where the training sub-grids will be generated. Similarly, `valid_map_directory` is the directory containing validation cryo-EM density maps, and `valid_sub_grids` is the directory where the validation sub-grids will be generated. After generation of sub-grids, run:
+
+```
+ls train_sub_grids > train_splits.txt
+ls valid_sub_grids > valid_splits.txt
+```
+
+We used the distributed data parallel (DDP) technique to train the models on 24 compute nodes, each equipped with 6 NVIDIA V100 GPUs with 32GB of memory. The training program can run on a single GPU, multiple GPUs, or a multi-node cluster with multiple GPUs. Finally, in the training scripts [train/cryo2struct_atom_train.py](train/cryo2struct_atom_train.py) and [train/cryo2struct_amino_train.py](train/cryo2struct_amino_train.py) change the values in `AVAIL_GPUS` to the number of GPUs available in the compute node, `NUM_NODES` to the number of available compute nodes, and set `BATCH_SIZE`, and `DATASET_DIR` to the path of the Cryo2Struct directory. Then, train the model by running:
+
+```
+python3 train/cryo2struct_amino_train.py    #trains amino acid-type prediction model
+python3 train/cryo2struct_atom_train.py     #trains atom type prediction model
+```
+Monitor the training progress in [Weights and Biases](https://wandb.ai/site).
+
+
+Optional: The source code for data preprocessing, label generation and validation of training data is available at [Cryo2StructData GitHub repository](https://github.com/BioinfoMachineLearning/cryo2struct).
 
 
 ## Contact Information
 If you have any question, feel free to open an issue or reach out to us: [ngzvh@missouri.edu](ngzvh@missouri.edu), [chengji@missouri.edu](chengji@missouri.edu).
 
 ## Acknowledgements
-We thank computing resource Summit supercomputer at the [Oak Ridge Leadership Computing Facility](https://www.olcf.ornl.gov/) for supporting training of the deep transformer model. Additionally, we appreciate the High-Performance Computing (HPC) resource, Hellbender, located at the University of Missouri, Columbia, MO, which was used for both the inference and alignment process.
+We thank computing resource Summit supercomputer at the [Oak Ridge Leadership Computing Facility](https://www.olcf.ornl.gov/) for supporting training of the deep learning model. Additionally, we appreciate the High-Performance Computing (HPC) resource, Hellbender, located at the University of Missouri, Columbia, MO, which was used for both the inference and alignment process.
 
 
 
