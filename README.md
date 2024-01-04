@@ -97,7 +97,7 @@ conda install -c conda-forge gxx
 g++ -fPIC -shared -o viterbi.so viterbi.cpp -O3
 cd ..
 ```
-The above command activates the Conda environment and installs the ``gxx`` package, which provides the GCC C++ compiler. This compiler is useful for compiling C++ code on the system. The HMM alignment program runs on the ``CPU`` and is optimized at the highest level using the``-O3`` flag. We tested, and the above compilation was successful on CentOS 7, 8, and AlmaLinux OS 8.8, 8.9. 
+The above command installs the ``gxx`` package in the activated conda environment, which provides the GCC C++ compiler. This compiler is useful for compiling C++ code on the system. The HMM alignment program runs on the ``CPU`` and is optimized at the highest level using the``-O3`` flag. We tested, and the above compilation was successful on CentOS 7, 8, and AlmaLinux OS 8.8, 8.9. 
 
 Finally, run the following:
 
