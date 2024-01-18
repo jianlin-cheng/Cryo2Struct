@@ -166,7 +166,7 @@ If you use the code or data in this package, please cite:
 	elocation-id = {2024.01.02.573943},
 	year = {2024},
 	doi = {10.1101/2024.01.02.573943},
-	publisher = {Cold Spring Harbor Laboratory}
+	publisher = {Cold Spring Harbor Laboratory},
 	URL = {https://www.biorxiv.org/content/early/2024/01/02/2024.01.02.573943},
 	eprint = {https://www.biorxiv.org/content/early/2024/01/02/2024.01.02.573943.full.pdf},
 	journal = {bioRxiv}
