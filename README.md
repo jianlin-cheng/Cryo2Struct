@@ -1,10 +1,21 @@
 # Cryo2Struct: De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer and Hidden Markov Model
 
 
-Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method that first employs a 3D transformer-based model to identify atoms and amino acid types in cryo-EM density maps. It then utilizes a novel Hidden Markov Model (HMM) to connect predicted atoms, building the backbone structures of proteins. The dataset used to train and validate Cryo2Struct is available on [Cryo2StructData Dataverse](https://doi.org/10.7910/DVN/FCDG0W) , and the description of the data preparation and labeling process can be found in [Cryo2StructData Paper](https://www.biorxiv.org/content/10.1101/2023.06.14.545024v2), [Cryo2StructData GitHub](https://github.com/BioinfoMachineLearning/cryo2struct). The detailed information about the test datasets including the EMD IDs of the density maps and the evaluation scores are provided in two Excel files (Standard_test_data.xlsx for the standard test dataset and Cryo2Struct_test_data.xlsx for the new test dataset) available at [Cryo2Struct Dataverse](https://doi.org/10.7910/DVN/GQCTTD), and the true structures along with the structural models built by Cryo2Struct is also available in the same Cryo2Struct Dataverse website. Additionally, for easy reproduction, the codes are also available on [Code Ocean](https://codeocean.com/capsule/1820995/tree).
+Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method that first employs a 3D transformer-based model to identify atoms and amino acid types in cryo-EM density maps. It then utilizes a novel Hidden Markov Model (HMM) to connect predicted atoms, building the backbone structures of proteins. The dataset used to train and validate Cryo2Struct is available on [Cryo2StructData Dataverse](https://doi.org/10.7910/DVN/FCDG0W) , and the description of the data preparation and labeling process can be found in [Cryo2StructData Paper](https://www.biorxiv.org/content/10.1101/2023.06.14.545024v2), [Cryo2StructData GitHub](https://github.com/BioinfoMachineLearning/cryo2struct). The detailed information about the test datasets including the EMD IDs of the density maps and the evaluation scores are provided in two Excel files (Standard_test_data.xlsx for the standard test dataset and Cryo2Struct_test_data.xlsx for the new test dataset) available at [Cryo2Struct Dataverse](https://doi.org/10.7910/DVN/GQCTTD), and the true structures along with the structural models built by Cryo2Struct is also available in the same Cryo2Struct Dataverse website. 
 ![Cryo2Struct_overview](./img/overview.png)
 
-## Setup Environment
+
+## Cryo2Struct Capsule on Code Ocean
+
+[Cryo2Struct Capsule on Code Ocean](https://codeocean.com/capsule/1820995/tree) is a self-contained, fully pre-configured computing environment that includes Cryo2Struct's code, data, version history, and results. This capsule facilitates effortless replication of results. To access and run the Cryo2Struct Capsule, simply visit the [Cryo2Struct Capsule on Code Ocean](https://codeocean.com/capsule/1820995/tree) and click on ``Reproducible Run``. Explore the code, modify parameters, and rerun the experiment to observe the impact on results. Cryo2Struct Capsule is:
+
+- **Self-contained**: All necessary dependencies, code, and data are encapsulated within the Cryo2Struct capsule.
+- **Version History**: Easy to track changes and access previous versions of the code and results.
+- **Reproducibility**: Ability to reproduce results reliably, both in the present and in the future.
+
+
+## Setup Environment (Locally)
+To setup ``Cryo2Struct`` locally, follow the steps: 
 
 Clone this repository and `cd` into it
 ```
