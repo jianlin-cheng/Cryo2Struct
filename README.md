@@ -15,7 +15,7 @@ Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method tha
 
 
 ## Setup Environment (Locally)
-To setup ``Cryo2Struct`` locally, follow the steps: 
+To setup Cryo2Struct locally, follow the steps below. It takes about 3-7 minutes to set up the environement to run Cryo2Struct
 
 Clone this repository and `cd` into it
 ```
@@ -117,7 +117,17 @@ python3 cryo2struct.py --density_map_name 34610
 ```
 
 4. <ins>**Output**</ins>:  **Modeled atomic structure**
-The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full.pdb).
+The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full.pdb). It took 9.19 minutes to model the structure for cryo-EM density map ``34610``. 
+
+## Evaluation
+The evaluation results presented in the paper is computed using [Phenix's chain_comparison tool](https://phenix-online.org/documentation/reference/chain_comparison.html) and [US-align](https://zhanggroup.org/US-align/). US-align can be run in it's web server, however, the Phenix needs to be installed locally to compute the metrics. After installation of Phenix tool, run the following:
+
+```
+phenix.chain_comparison target.pdb query.pdb
+```
+
+
+
 
 ## Training Cryo2Struct Deep Learning
 The training programs are available in the [train/](train/) directory. Cryo2Struct was trained on Cryo2StructData, which is accessible on the [Cryo2StructData Dataverse](https://doi.org/10.7910/DVN/FCDG0W). Download the full dataset from [Cryo2Struct Full Dataset](https://doi.org/10.7910/DVN/FCDG0W) or a small subset from [Cryo2Struct Small Subsample Dataset](https://doi.org/10.7910/DVN/CGUENL). After downloading the dataset, `unzip` the compressed files. The directory names are the EMD ID of the cryo-EM density map.
