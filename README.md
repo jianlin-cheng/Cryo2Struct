@@ -15,7 +15,7 @@ Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method tha
 
 
 ## Setup Environment (Locally)
-To setup Cryo2Struct locally, follow the steps below. It takes about 3-7 minutes to set up the environement to run Cryo2Struct
+To setup Cryo2Struct locally, follow the steps below. It takes about 3-7 minutes to set up the environment to run Cryo2Struct.
 
 Clone this repository and `cd` into it
 ```
