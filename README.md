@@ -61,7 +61,7 @@ cryo2struct
 ```
 
 2. **Running Cryo2Struct**
-The deep learning requires trained atom and amino acid type models. The trained models are available in [Cryo2Struct Havard Dataverse](https://doi.org/10.7910/DVN/GQCTTD). Use the following to download the trained models. 
+The deep learning requires trained atom and amino acid type models. The trained models are available in [Cryo2Struct Harvard Dataverse](https://doi.org/10.7910/DVN/GQCTTD). Use the following to download the trained models. 
 
 ```
 mkdir models
