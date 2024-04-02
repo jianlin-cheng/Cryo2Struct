@@ -119,6 +119,10 @@ python3 cryo2struct.py --density_map_name 34610
 4. <ins>**Output**</ins>:  **Modeled atomic structure**
 The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full.pdb). It took 9.19 minutes to model the structure for cryo-EM density map ``34610``. 
 
+
+5. <ins>**Confidence Scores**</ins>: 
+Cryo2Struct provides a per-residue estimation of confidence within the range of [0, 1] for both carbon-alpha and amino acid type predictions. The confidence score file and plot are available in [input/34610/](input/34610/). 
+
 ## Evaluation
 The evaluation results presented in the paper is computed using [Phenix's chain_comparison tool](https://phenix-online.org/documentation/reference/chain_comparison.html) and [US-align](https://zhanggroup.org/US-align/). US-align can be run in it's web server, however, the Phenix needs to be installed locally to compute the metrics. After installation of Phenix tool, run the following:
 

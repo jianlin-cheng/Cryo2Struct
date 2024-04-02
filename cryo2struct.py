@@ -90,7 +90,7 @@ def extract_probs_cords_from_atom_amino(config_dict):
     probability_file_amino = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_probabilities_amino.txt" # comes from amino_inference.py
     probability_file_amino_atom_common_emi = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_probabilities_amino_atom_common_emi.txt" # save common amino and atom
     probability_file_amino_common_emi = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_probabilities_amino_emi.txt" # save amino probability as emission
-    
+    probability_file_amino_atom_common_ca_prob = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_probabilities_amino_atom_common_ca_prob.txt" # save common amino and atom (atom prob)
     save_cords = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_coordinates_ca.txt" # save cords as transition matrix
 
     if os.path.exists(save_cords):
@@ -103,12 +103,12 @@ def extract_probs_cords_from_atom_amino(config_dict):
         os.remove(probability_file_amino_common_emi)
     
     get_probs_cords_from_atom_amino.get_joint_probabity_common_threshold(probability_file_atom=probability_file_atom, probability_file_amino_atom_common=probability_file_amino_atom_common_emi, 
-                    probability_file_amino=probability_file_amino, s_c=save_cords, threshold = config_dict['threshold'])
+                    probability_file_amino=probability_file_amino, s_c=save_cords, threshold = config_dict['threshold'], probability_file_amino_atom_common_ca_prob=probability_file_amino_atom_common_ca_prob)
 
 
 def cluster_emission_transition(config_dict):
-    save_cords, save_probs_aa= clustering_centroid.main(config_dict)
-    return save_cords, save_probs_aa
+    save_cords, save_probs_aa, save_ca_probs= clustering_centroid.main(config_dict)
+    return save_cords, save_probs_aa, save_ca_probs
 
 
 def main():
@@ -123,9 +123,9 @@ def main():
     # preparing for HMM model 
     extract_probs_cords_from_atom_amino(config_dict)
     # clustering and preparing emission and transition matrix
-    coordinate_file, emission_file = cluster_emission_transition(config_dict)
+    coordinate_file, emission_file, save_ca_probs = cluster_emission_transition(config_dict)
     # run viterbi algorithm
-    alignment.main(coordinate_file, emission_file, config_dict)
+    alignment.main(coordinate_file, emission_file, config_dict, save_ca_probs)
 
 if __name__ == "__main__":
     main()

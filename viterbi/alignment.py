@@ -14,7 +14,7 @@ import os
 import ctypes
 import time
 import glob
-
+import matplotlib.pyplot as plt
 from utils import extract_seq_from_pdb
 
 one_to_three_amino ={'V':'VAL', 'I':'ILE', 'L':'LEU', 'E':'GLU', 'Q':'GLN',
@@ -57,14 +57,48 @@ chains_sec_sequence_dict = dict()
 transition_dic = dict()
 hmm_dic = dict()
 chain_list = list()
+cord_idx_prob_dict = dict()
 
 chain_count = 0
 
 start_time = time.time()
 
-def load_data(trans_file, hmm_file):
+
+def make_plot(res_name, ca_confidence, aa_confidence, config_dict):
+    # Data
+    #residue = ['G', 'P', 'G', 'S', 'M', 'E', 'E', 'H', 'T', 'E', 'A', 'G', 'S', 'A', 'P', 'E', 'M', 'G', 'A', 'Q', 'K', 'A', 'L', 'I', 'D', 'N', 'P']
+    #ca_confidence = [0.654, 0.758, 0.681, 0.81, 0.579, 0.628, 0.652, 0.568, 0.666, 0.661, 0.494, 0.6, 0.537, 0.462, 0.522, 0.553, 0.617, 0.751, 0.661, 0.471, 0.573, 0.516, 0.439, 0.461, 0.579, 0.925, 0.705]
+    # aa_confidence = [0.58, 0.128, 0.227, 0.291, 0.062, 0.083, 0.032, 0.065, 0.145, 0.137, 0.037, 0.139, 0.129, 0.189, 0.114, 0.1, 0.045, 0.621, 0.149, 0.071, 0.054, 0.11, 0.049, 0.084, 0.094, 0.042, 0.16]
+
+    # Get unique elements in residue
+    unique_residues = list(set(res_name))
+    num_unique_residues = len(unique_residues)
+
+    # Define shapes for residues
+    shapes = ['o', 's', '^', 'x', 'v', 'D', 'p', '*', '>', '<', 'h', '+', '|', '.', '1', '2', '3', '4', '8', 'd']
+
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    for i, res in enumerate(unique_residues):
+        shape = shapes[i % num_unique_residues]  # Cycle through shapes
+        indices = [idx for idx, r in enumerate(res_name) if r == res]
+        plt.scatter([ca_confidence[idx] for idx in indices], [aa_confidence[idx] for idx in indices], label=res, marker=shape, edgecolors='black', s=100)
+
+    plt.title('Residue Scores')
+    plt.xlabel('CA Confidence')
+    plt.ylabel('Amino Acid Type Confidence')
+    plt.legend(title='Residue')
+    plt.grid(False)  # Turn off grid
+    # plt.xlim(0, 1)  # Set x-axis limit
+    plt.ylim(0, 1)  # Set y-axis limit
+    plt.tight_layout()
+    # plt.show()
+    plt.savefig(f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/seq_conf_score.png", bbox_inches='tight', dpi=1000)
+
+def load_data(trans_file, hmm_file, save_ca_probs):
     trans_count = 0
     hmm_count = 0
+    ca_prob_count = 0
     # creating key-value pair for hmm_file
     with open(hmm_file, 'r') as h_file:
         for line in h_file:
@@ -81,6 +115,11 @@ def load_data(trans_file, hmm_file):
             transition_dic[trans_count] = t
             trans_count += 1
 
+    with open(save_ca_probs, 'r') as ca_prob_f:
+        for line in ca_prob_f:
+            p = line.replace("\n", "")
+            cord_idx_prob_dict[ca_prob_count] = p
+            ca_prob_count += 1
 
 
 def save(save_filename):
@@ -167,7 +206,7 @@ def make_standard_observations(chain_obser):
     seq_list.extend(filtered_observations)
     return filtered_observations
 
-def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, states, initial_matrix, config_dict):
+def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, states, initial_matrix, config_dict, save_ca_probs, emission_matrix_dl):
     print(f"Cryo2Struct Alignment: Aligning Chain {seq_key_list[key_idx]}")
     chain_observations_np = np.array([residue_label[x] for x in chain_observations], dtype=np.int32)
     exclude_states_np = np.array(exclude_states, dtype=np.int32)
@@ -237,12 +276,15 @@ def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, 
 
     key_idx += 1
     if key_idx < len(seq_key_list):
-        execute(key_idx=key_idx, states=states,transition_matrix=transition_matrix, emission_matrix=emission_matrix, config_dict=config_dict)
+        execute(key_idx=key_idx, states=states,transition_matrix=transition_matrix, emission_matrix=emission_matrix, config_dict=config_dict, save_ca_probs=save_ca_probs, emission_matrix_dl=emission_matrix_dl)
     else:
         cord_file = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_cluster_transition_ca.txt"
         hmm_out_save_file = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_hmm_{config_dict['use_sequence']}.txt"
         save_pdb_file = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_cryo2struct_{config_dict['use_sequence']}.pdb"
 
+        save_confidence_score = f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}/{config_dict['density_map_name']}_cryo2struct_confidence_scores.out"
+        if os.path.exists(save_confidence_score):
+            os.remove(save_confidence_score)
         if os.path.exists(hmm_out_save_file):
             os.remove(hmm_out_save_file)
 
@@ -253,9 +295,9 @@ def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, 
         for i in range(len(exclude_states)):     
             print(f"{seq_list[i]}\t{exclude_states[i]}",file=hmm_outs)
         hmm_outs.close()
-        load_data(trans_file=cord_file, hmm_file=hmm_out_save_file)
+        load_data(trans_file=cord_file, hmm_file=hmm_out_save_file, save_ca_probs=save_ca_probs)
         save(save_filename=save_pdb_file)
-        print("Cryo2Struct Alignment: Modeled atomic structure saved in:", save_pdb_file)
+        # print("Cryo2Struct Alignment: Modeled atomic structure saved in:", save_pdb_file)
         print("Cryo2Struct Alignment: Total modeled residues:", len(set(exclude_states)))
         end_time = time.time()
         runtime_seconds = end_time - start_time
@@ -269,12 +311,72 @@ def run_vitebi(key_idx, chain_observations, transition_matrix, emission_matrix, 
         if os.path.exists(f"{map_directory_path}/{config_dict['density_map_name']}_atom_predicted.mrc"):
             os.remove(f"{map_directory_path}/{config_dict['density_map_name']}_atom_predicted.mrc")
         files_to_delete = glob.glob(os.path.join(map_directory_path, f"*.txt"))
+        # files_to_delete = glob.glob(os.path.join(map_directory_path, f"*.log"))
         for f in files_to_delete:
             os.remove(f)
-        print("Cryo2Struct: Finished!")
+        print("Cryo2Struct: Finished!\n")
+        ami_list = list()
+        ami_dl_list = list()
+        ca_list = list()
+        seq_list_conf = list()
+        for k,v in hmm_dic.items():
+            amino = k.split("_")[0]
+            seq_list_conf.append(amino)
+            ami=  residue_label[amino]
+            ami_list.append(emission_matrix[v][ami])
+            ami_dl_list.append(emission_matrix_dl[v][ami])
+            ca_list.append(float(cord_idx_prob_dict[v]))
+
+        average_amino_conf = (sum(ami_list)/len(ami_list))
+        average_atom_conf = sum(ca_list)/ len(ca_list)
+        average_amino_dl = sum(ami_dl_list) / len(ami_dl_list)
+
+        correlation_matrix = np.corrcoef(ami_dl_list, ami_list)
+        correlation = correlation_matrix[0, 1]
+
+        print("Cryo2Struct Average Amino Confidence Score: ", average_amino_conf)
+        print("Cryo2Struct Average Amino Probability Score from DL: ", average_amino_dl)
+        #  print(ca_list)
+        # print(hmm_dic)
+        print("Cryo2Struct Average Carbon-alpha Confidence Score: ", average_atom_conf)
+        print("Cryo2Struct Correlation between Amino Confidence and Amino Prob from DL:", correlation)
+
+        print("\n")
+        print(f"Cryo2Struct Modeled Structure Saved in {save_pdb_file}\n")
+        print(f"Cryo2Struct Confidence Score File and Plot Saved in {save_confidence_score}\n")
+        
+
+        with open(save_confidence_score, 'a') as conf:
+            conf.write("##############- Cryo2Struct -############## \n \n")
+            conf.write(f"+ Confidence scores for input cryo-EM density map: {config_dict['density_map_name']}  \n")
+            conf.write("+ Input Sequence: \n")
+            for k,v in chains_sequence_dict.items():
+                conf.write(f">Chain {k} \n")
+                conf.write(f"{v} \n")
+            conf.write("\n+ Average Scores: \n")
+            conf.write(f"Average Carbon-alpha Confidence Score: {average_atom_conf} \n")
+            conf.write(f"Average Amino Confidence Score: {average_amino_conf} \n")
+            conf.write(f"Average Amino Probability Score from DL: {average_amino_dl} \n")
+            conf.write(f"Correlation between Amino Confidence and Amino Prob from DL: {correlation} \n")
+            conf.write("Per residue scores: \n")
+            conf.write("Residue \t \t Chain \t \t CA Confidence \t \t Amino Acid Type Confidence \t \t Amino Acid Type Prob from DL \n")
+            for a in range(len(seq_list)):
+                conf.write(f"{seq_list_conf[a]}")
+                conf.write("\t \t \t \t \t")
+                conf.write(f"{chain_list[a]}")
+                conf.write("\t \t \t \t")
+                conf.write("{:.3f}".format(round(ca_list[a], 3)))
+                conf.write("\t \t \t \t")
+                conf.write("{:.3f}".format(round(ami_list[a], 3)))
+                conf.write("\t \t \t \t")
+                conf.write("{:.3f}".format(round(ami_dl_list[a], 3)))
+                conf.write("\n")
+            
+        make_plot(res_name=seq_list_conf, ca_confidence=ca_list, aa_confidence=ami_list, config_dict=config_dict)
+
         exit()
 
-def execute(key_idx, states, transition_matrix, emission_matrix, config_dict):
+def execute(key_idx, states, transition_matrix, emission_matrix, config_dict, save_ca_probs, emission_matrix_dl):
     chain_sequence = chains_sequence_dict[seq_key_list[key_idx]]
     chain_observations = make_standard_observations(chain_obser=chain_sequence)
     initial_hidden_pobabilities = np.zeros((len(states)), dtype=np.double)
@@ -283,11 +385,12 @@ def execute(key_idx, states, transition_matrix, emission_matrix, config_dict):
         observation_seq_first_amino_count += emission_matrix[i_c][residue_label[chain_observations[0]]] 
     for i_c in range(len(states)):
         initial_hidden_pobabilities[i_c] = emission_matrix[i_c][residue_label[chain_observations[0]]] / observation_seq_first_amino_count
-    run_vitebi(key_idx=key_idx, chain_observations=chain_observations ,transition_matrix=transition_matrix, emission_matrix=emission_matrix, states=states, initial_matrix=initial_hidden_pobabilities, config_dict=config_dict)
+    run_vitebi(key_idx=key_idx, chain_observations=chain_observations ,transition_matrix=transition_matrix, emission_matrix=emission_matrix, 
+               states=states, initial_matrix=initial_hidden_pobabilities, config_dict=config_dict, save_ca_probs=save_ca_probs, emission_matrix_dl=emission_matrix_dl)
 
 
 
-def main(coordinate_file, emission_file, config_dict):
+def main(coordinate_file, emission_file, config_dict, save_ca_probs):
     fasta_file = [f for f in os.listdir(f"{config_dict['input_data_dir']}/{config_dict['density_map_name']}") if f.endswith(".fasta")]
     fasta_file.sort()
     if config_dict['use_sequence'] == "full":
@@ -349,6 +452,7 @@ def main(coordinate_file, emission_file, config_dict):
     emission_matrix = makeEmission(emission_file, length_coordinate_list)
     emission_matrix += 1e-20
     emission_matrix = normalize_sum(emission_matrix)
+    emission_matrix_dl = emission_matrix
     emission_matrix_aa = makeEmission_aa(emission_matrix)
     emission_matrix_aa = normalize_sum(emission_matrix_aa)
 
@@ -379,5 +483,5 @@ def main(coordinate_file, emission_file, config_dict):
         chain_list.extend(ke*length_va)
     key_idx = 0
     print("Cryo2Struct Alignment: HMM Construction Complete!")
-    execute(key_idx=key_idx, states=states,transition_matrix=coordinate_distance_matrix, emission_matrix=emission_matrix_aa, config_dict =config_dict)
+    execute(key_idx=key_idx, states=states,transition_matrix=coordinate_distance_matrix, emission_matrix=emission_matrix_aa, config_dict =config_dict, save_ca_probs=save_ca_probs, emission_matrix_dl=emission_matrix_dl)
     exit()

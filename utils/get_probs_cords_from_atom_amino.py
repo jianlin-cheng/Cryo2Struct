@@ -10,7 +10,7 @@ ca_coordinates = list()
 prob_dic = dict()
 
 
-def get_joint_probabity_common_threshold(probability_file_atom, probability_file_amino_atom_common, probability_file_amino, s_c, threshold):
+def get_joint_probabity_common_threshold(probability_file_atom, probability_file_amino_atom_common, probability_file_amino, s_c, threshold, probability_file_amino_atom_common_ca_prob):
     """
     get only common carbon alphas from amino and atom files
     
@@ -46,6 +46,7 @@ def get_joint_probabity_common_threshold(probability_file_atom, probability_file
                 count_uncommon_atoms += 1
 
     save_cluster_co = open(s_c, 'a')
+    save_cluster_prob = open(probability_file_amino_atom_common_ca_prob,'a')
     amino_atom_prob = open(probability_file_amino_atom_common,'a')
     for k,v in common_ca.items():
         if v > threshold:
@@ -54,6 +55,9 @@ def get_joint_probabity_common_threshold(probability_file_atom, probability_file
                 x,y,z = k
                 print(f"{x} {y} {z}", file=save_cluster_co)
                 amino_atom_prob.write(f"{list(k)}")
+                save_cluster_prob.write(f"{list(k)}")
+                save_cluster_prob.write(f", {v}")
+                save_cluster_prob.write(f"\n")
                 for e in emiss_val:
                     amino_atom_prob.write(f", {e}")
                 amino_atom_prob.write(f"\n")
