@@ -7,7 +7,7 @@ Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method tha
 
 ## Cryo2Struct Capsule on Code Ocean
 
-[Cryo2Struct Capsule on Code Ocean](https://codeocean.com/capsule/1820995/tree) is a self-contained, fully pre-configured computing environment that includes Cryo2Struct's code, data, version history, and results. This capsule facilitates effortless replication of results. To access and run the Cryo2Struct Capsule, simply visit the [Cryo2Struct Capsule on Code Ocean](https://codeocean.com/capsule/1820995/tree) and click on ``Reproducible Run``. Explore the code, modify parameters, and rerun the experiment to observe the impact on results. Cryo2Struct Capsule is:
+[Cryo2Struct Capsule on Code Ocean](https://doi.org/10.24433/CO.9328198.v1) is a self-contained, fully pre-configured computing environment that includes Cryo2Struct's code, data, version history, and results. This capsule facilitates effortless replication of results. To access and run the Cryo2Struct Capsule, simply visit the [Cryo2Struct Capsule on Code Ocean](https://doi.org/10.24433/CO.9328198.v1) and click on ``Reproducible Run``. Explore the code, modify parameters, and rerun the experiment to observe the impact on results. Cryo2Struct Capsule is:
 
 - **Self-contained**: All necessary dependencies, code, and data are encapsulated within the Cryo2Struct capsule.
 - **Version History**: Easy to track changes and access previous versions of the code and results.
