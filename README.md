@@ -118,7 +118,7 @@ python3 cryo2struct.py --density_map_name 34610
 ```
 
 4. <ins>**Output**</ins>:  **Modeled atomic structure**
-The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full_conf_score.pdb). To visualize the structure, use ChimeraX. To enable the color spectrum (confidence score) in ChimeraX, navigate to Tools > Depiction > Render by Attribute and select 'bfactor' as the attribute. It took 9.19 minutes to model the structure for cryo-EM density map ``34610``. 
+The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full_conf_score.pdb](input/34610/34610_cryo2struct_full_conf_score.pdb). To visualize the structure, use [UCSF ChimeraX](https://www.cgl.ucsf.edu/chimerax/index.html). To enable the color spectrum (confidence score) in UCSF ChimeraX, navigate to Tools > Depiction > Render by Attribute and select 'bfactor' as the attribute. It took 9.19 minutes to model the structure for cryo-EM density map ``34610``. 
 
 
 5. <ins>**Confidence Scores**</ins>: 
