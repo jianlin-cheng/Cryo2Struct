@@ -1,7 +1,7 @@
 # Cryo2Struct: De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer and Hidden Markov Model
 
 
-Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method that first employs a 3D transformer-based model to identify atoms and amino acid types in cryo-EM density maps. It then utilizes a novel Hidden Markov Model (HMM) to connect predicted atoms, building the backbone structures of proteins. The dataset used to train and validate Cryo2Struct is available on [Cryo2StructData Dataverse](https://doi.org/10.7910/DVN/FCDG0W) , and the description of the data preparation and labeling process can be found in [Cryo2StructData Paper](https://www.biorxiv.org/content/10.1101/2023.06.14.545024v2), [Cryo2StructData GitHub](https://github.com/BioinfoMachineLearning/cryo2struct). The detailed information about the test datasets including the EMD IDs of the density maps and the evaluation scores are provided in two Excel files (Standard_test_data.xlsx for the standard test dataset and Cryo2Struct_test_data.xlsx for the new test dataset) available at [Cryo2Struct Dataverse](https://doi.org/10.7910/DVN/GQCTTD), and the true structures along with the structural models built by Cryo2Struct is also available in the same Cryo2Struct Dataverse website. 
+Cryo2Struct is a fully automated ab initio cryo-EM structure modeling method that first employs a 3D transformer-based model to identify atoms and amino acid types in cryo-EM density maps. It then utilizes a novel Hidden Markov Model (HMM) to connect predicted atoms, building the backbone structures of proteins. The dataset used to train and validate Cryo2Struct is available on [Cryo2StructData Dataverse](https://doi.org/10.7910/DVN/FCDG0W) , and the description of the data preparation and labeling process can be found in [Cryo2StructData Paper](https://doi.org/10.1038/s41597-024-03299-9), [Cryo2StructData GitHub](https://github.com/BioinfoMachineLearning/cryo2struct). The detailed information about the test datasets including the EMD IDs of the density maps and the evaluation scores are provided in two Excel files (Standard_test_data.xlsx for the standard test dataset and Cryo2Struct_test_data.xlsx for the new test dataset) available at [Cryo2Struct Dataverse](https://doi.org/10.7910/DVN/GQCTTD), and the true structures along with the structural models built by Cryo2Struct is also available in the same Cryo2Struct Dataverse website. 
 ![Cryo2Struct_overview](./img/overview.png)
 
 
@@ -118,7 +118,7 @@ python3 cryo2struct.py --density_map_name 34610
 ```
 
 4. <ins>**Output**</ins>:  **Modeled atomic structure**
-The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full.pdb). It took 9.19 minutes to model the structure for cryo-EM density map ``34610``. 
+The output model is saved in the density map's directory. The modeled atomic structure for this example is saved as [input/34610/34610_cryo2struct_full.pdb](input/34610/34610_cryo2struct_full_conf_score.pdb). To visualize the structure, use ChimeraX. To enable the color spectrum (confidence score) in ChimeraX, navigate to Tools > Depiction > Render by Attribute and select 'bfactor' as the attribute. It took 9.19 minutes to model the structure for cryo-EM density map ``34610``. 
 
 
 5. <ins>**Confidence Scores**</ins>: 
