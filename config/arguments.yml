@@ -1,7 +1,8 @@
 density_map_name: '34610'
 input_data_dir: 'input' # provide absolute path of input directory
-amino_checkpoint: 'models/amino_acid_type.ckpt'
-atom_checkpoint: 'models/atom_type.ckpt'
+amino_checkpoint: 'models/amino_acid_type.ckpt' # provide absolute path of amino acid checkpoint
+atom_checkpoint: 'models/atom_type.ckpt' # provide absolute path of atom checkpoint
+confidence_score_models: 'models' # provide absolute path of models directory
 infer_run_on: 'cpu' # options- cpu or gpu
 infer_on_gpu: 0
 threshold: 0.4 # threshold for picking carbon alpha atoms
