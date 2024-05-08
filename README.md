@@ -81,6 +81,8 @@ cryo2struct
 |── models
     │-- amino_acid_type.ckpt
     |-- atom_type.ckpt
+    |-- aa_regression_model.pkl
+    |-- ca_regression_model.pkl
 ```
 
 Update the configurations in the [config/arguments.yml](config/arguments.yml) file. Especialy the input data directory, trained model checkpoint path,  and density map name. By default the program runs inference in `CPU`, running the inference program on the ``GPU`` speeds up prediction. To enable ``GPU`` processing, modify ``infer_run_on`` in the configuration file to ``gpu`` and provide the GPU device id on ``infer_on_gpu`` (example: 0). One way to update the configuration by using visual editor (``vi``).
