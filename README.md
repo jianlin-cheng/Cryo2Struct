@@ -64,7 +64,6 @@ cryo2struct
 The deep learning requires trained atom and amino acid type models. The trained models are available in [Cryo2Struct Harvard Dataverse](https://doi.org/10.7910/DVN/GQCTTD). Use the following to download the trained models. 
 
 ```
-mkdir models
 cd models
 wget -O amino_acid_type.ckpt https://dataverse.harvard.edu/api/access/datafile/8076563
 wget -O atom_type.ckpt https://dataverse.harvard.edu/api/access/datafile/8076564
@@ -121,7 +120,7 @@ The output model is saved in the density map's directory. The modeled atomic str
 
 
 5. <ins>**Confidence Scores**</ins>: 
-Cryo2Struct provides a per-residue estimation of confidence within the range of [0, 1] for both carbon-alpha and amino acid type predictions. The confidence score file and plot are available in [input/34610/](input/34610/). 
+Cryo2Struct provides a per-residue estimation of confidence within the range of [0, 1] for both carbon-alpha and amino acid type predictions. An example confidence score file and plot are available in [input/34610/](input/34610/). 
 
 ## Evaluation
 The evaluation results presented in the paper is computed using [Phenix's chain_comparison tool](https://phenix-online.org/documentation/reference/chain_comparison.html) and [US-align](https://zhanggroup.org/US-align/). US-align can be run in it's web server, however, the Phenix needs to be installed locally to compute the metrics. After installation of Phenix tool, run the following:
