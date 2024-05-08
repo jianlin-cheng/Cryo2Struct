@@ -147,3 +147,4 @@ dependencies:
     - yarl==1.9.2
     - zipp==3.17.0
     - matplotlib==3.8.3
+    - scikit-learn==1.4.2
