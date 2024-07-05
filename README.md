@@ -186,16 +186,16 @@ We thank computing resource Summit supercomputer at the [Oak Ridge Leadership Co
 If you use the code or data in this package, please cite:
 
 ```bibtex
-@article {Cryo2Struct,
-	author = {Nabin Giri and Jianlin Cheng},
-	title = {De Novo Atomic Protein Structure Modeling for Cryo-EM Density Maps Using 3D Transformer and Hidden Markov Model},
-	elocation-id = {2024.01.02.573943},
-	year = {2024},
-	doi = {10.1101/2024.01.02.573943},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2024/01/02/2024.01.02.573943},
-	eprint = {https://www.biorxiv.org/content/early/2024/01/02/2024.01.02.573943.full.pdf},
-	journal = {bioRxiv}
+@article{giri2024novo,
+  title={De novo atomic protein structure modeling for cryoEM density maps using 3D transformer and HMM},
+  author={Giri, Nabin and Cheng, Jianlin},
+  journal={Nature Communications},
+  volume={15},
+  number={1},
+  pages={5511},
+  year={2024},
+  doi={https://doi.org/10.1038/s41467-024-49647-6},
+  publisher={Nature Publishing Group UK London}
 }
 
 ```
