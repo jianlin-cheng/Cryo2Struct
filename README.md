@@ -202,6 +202,6 @@ If you use the code or data in this package, please cite:
 
 
 ## Visualizing the Atomic Structure Modeled by Cryo2Struct
-The superimposition of the predicted backbone structure (in blue) with the known backbone structure (in gold) of EMD ID: 34610. The density map has a resolution of 2.9 Angstroms and was released on 2023-11-01.
+The superimposition of the predicted backbone structure (in blue) with the known backbone structure (in green) of EMD ID: 17961, PDB ID: 8PVC. The density map has a resolution of 2.6 Angstroms and was released on 2023-11-29.
 
-![34610.gif](./img/34610.gif)
+![17961.gif](./img/17961.gif)
